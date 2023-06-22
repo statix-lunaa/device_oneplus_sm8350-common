@@ -21,11 +21,16 @@ if [ ! -f "${HELPER}" ]; then
 fi
 source "${HELPER}"
 
+export DEVICE=lunaa
+export DEVICE_COMMON=sm8350-common
+export VENDOR=realme
+export VENDOR_COMMON=oneplus
+
 # Initialize the helper for common
-setup_vendor "${DEVICE_COMMON}" "${VENDOR}" "${ANDROID_ROOT}" true
+setup_vendor "${DEVICE_COMMON}" "${VENDOR_COMMON:-$VENDOR}" "${ANDROID_ROOT}" true
 
 # Warning headers and guards
-write_headers "lemonade lemonadep lunaa martini"
+write_headers "cupidr ice lemonade lemonadep lunaa martini porsche"
 
 # The standard common blobs
 write_makefiles "${MY_DIR}/proprietary-files.txt" true
@@ -33,7 +38,7 @@ write_makefiles "${MY_DIR}/proprietary-files.txt" true
 # Finish
 write_footers
 
-if [ -s "${MY_DIR}/../${DEVICE}/proprietary-files.txt" ]; then
+if [ -s "${MY_DIR}/../../${VENDOR}/${DEVICE}/proprietary-files.txt" ]; then
     # Reinitialize the helper for device
     setup_vendor "${DEVICE}" "${VENDOR}" "${ANDROID_ROOT}" false
 
@@ -41,7 +46,7 @@ if [ -s "${MY_DIR}/../${DEVICE}/proprietary-files.txt" ]; then
     write_headers
 
     # The standard device blobs
-    write_makefiles "${MY_DIR}/../${DEVICE}/proprietary-files.txt" true
+    write_makefiles "${MY_DIR}/../../${VENDOR}/${DEVICE}/proprietary-files.txt" true
 
     # Finish
     write_footers

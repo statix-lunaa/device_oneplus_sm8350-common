@@ -25,7 +25,7 @@ source "${HELPER}"
 CLEAN_VENDOR=true
 
 ONLY_COMMON=
-ONLY_TARGET=
+ONLY_TARGET=true
 KANG=
 SECTION=
 
@@ -63,6 +63,9 @@ function blob_fixup() {
         odm/etc/camera/CameraHWConfiguration.config)
             sed -i "/SystemCamera = / s/1;/0;/g" "${2}"
             ;;
+        odm/etc/init/vendor.oplus.hardware.oplusSensor@1.0-service.rc)
+            sed -i "/user/ s/system/root/g" "${2}"
+            ;;
         product/etc/sysconfig/com.android.hotwordenrollment.common.util.xml)
             sed -i "s/\/my_product/\/product/" "${2}"
             ;;
@@ -86,17 +89,17 @@ function blob_fixup() {
 
 if [ -z "${ONLY_TARGET}" ]; then
     # Initialize the helper for common device
-    setup_vendor "${DEVICE_COMMON}" "${VENDOR}" "${ANDROID_ROOT}" true "${CLEAN_VENDOR}"
+    setup_vendor "${DEVICE_COMMON}" "${VENDOR_COMMON:-$VENDOR}" "${ANDROID_ROOT}" true "${CLEAN_VENDOR}"
 
     extract "${MY_DIR}/proprietary-files.txt" "${SRC}" "${KANG}" --section "${SECTION}"
 fi
 
-if [ -z "${ONLY_COMMON}" ] && [ -s "${MY_DIR}/../${DEVICE}/proprietary-files.txt" ]; then
+if [ -z "${ONLY_COMMON}" ] && [ -s "${MY_DIR}/../../${VENDOR}/${DEVICE}/proprietary-files.txt" ]; then
     # Reinitialize the helper for device
-    source "${MY_DIR}/../${DEVICE}/extract-files.sh"
+    source "${MY_DIR}/../../${VENDOR}/${DEVICE}/extract-files.sh"
     setup_vendor "${DEVICE}" "${VENDOR}" "${ANDROID_ROOT}" false "${CLEAN_VENDOR}"
 
-    extract "${MY_DIR}/../${DEVICE}/proprietary-files.txt" "${SRC}" "${KANG}" --section "${SECTION}"
+    extract "${MY_DIR}/../../${VENDOR}/${DEVICE}/proprietary-files.txt" "${SRC}" "${KANG}" --section "${SECTION}"
 fi
 
 "${MY_DIR}/setup-makefiles.sh"

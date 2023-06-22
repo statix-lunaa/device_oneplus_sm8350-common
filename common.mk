@@ -126,6 +126,16 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.camera.full.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.camera.full.xml \
     frameworks/native/data/etc/android.hardware.camera.raw.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.camera.raw.xml
 
+# OplusCamera
+$(call inherit-product-if-exists, vendor/oplus/camera/opluscamera.mk)
+
+PRODUCT_SYSTEM_EXT_PROPERTIES += \
+    ro.oplus.system.camera.name=com.oplus.camera \
+    ro.oplus.system.camera.flashlight=com.oplus.motor.flashlight \
+    ro.oplus.camera.video_beauty.prefix=oplus.video.beauty. \
+    ro.oplus.camera.video.beauty.switch=oplus.switch.video.beauty \
+    ro.oplus.camera.speechassist=true
+
 # Dalvik
 $(call inherit-product, frameworks/native/build/phone-xhdpi-6144-dalvik-heap.mk)
 
@@ -335,8 +345,6 @@ PRODUCT_PACKAGES += \
     librmnetctl
 
 # Sensors
-$(call inherit-product, vendor/hardware/oplus/hidl/sensors/sensors_product.mk)
-
 PRODUCT_PACKAGES += \
     libsensorndkbridge \
     sensors.oplus
@@ -471,6 +479,3 @@ PRODUCT_BOOT_JARS += \
 
 # Inherit from the proprietary files makefile.
 $(call inherit-product, vendor/oneplus/sm8350-common/sm8350-common-vendor.mk)
-
-# Inherit GCAM
-$(call inherit-product, vendor/gcam/gcam-vendor.mk)
